@@ -1,0 +1,26 @@
+pragma language_version >= 0.23;
+
+import CompactStandardLibrary;
+
+// Public record of the latest selective-disclosure grant (visible on ledger).
+export ledger lastAgentId: Bytes<32>;
+export ledger lastCategoryMask: Uint<8>;
+export ledger lastGrantRoot: Bytes<32>;
+export ledger lastTimestamp: Uint<64>;
+
+/**
+ * Records that the user granted an agent access to memories in categoryMask.
+ * grantRoot is a commitment over the approved memory ids (computed off-chain in witness).
+ * Phase 2+ will add witness checks that each memory belongs to categoryMask.
+ */
+export circuit grantAgentAccess(
+  agentId: Bytes<32>,
+  categoryMask: Uint<8>,
+  grantRoot: Bytes<32>,
+  timestamp: Uint<64>
+): [] {
+  lastAgentId = disclose(agentId);
+  lastCategoryMask = disclose(categoryMask);
+  lastGrantRoot = disclose(grantRoot);
+  lastTimestamp = disclose(timestamp);
+}

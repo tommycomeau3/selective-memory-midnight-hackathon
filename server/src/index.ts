@@ -2,6 +2,7 @@ import './loadEnv.js';
 import express from 'express';
 import cors from 'cors';
 import { handleChat } from './chat.js';
+import { getMidnightStatus } from './midnight/status.js';
 import { generateAgentAccessProof } from './proof.js';
 import { listAgents } from './store.js';
 
@@ -11,8 +12,22 @@ const PORT = Number(process.env.PORT) || 3001;
 app.use(cors());
 app.use(express.json());
 
-app.get('/health', (_req, res) => {
-  res.json({ ok: true, openai: Boolean(process.env.OPENAI_API_KEY) });
+app.get('/health', async (_req, res) => {
+  const midnight = await getMidnightStatus();
+  res.json({
+    ok: true,
+    openai: Boolean(process.env.OPENAI_API_KEY),
+    midnight: {
+      phase0Ready: midnight.ready,
+      enabled: midnight.enabled,
+      proofServerUrl: midnight.proofServerUrl,
+    },
+  });
+});
+
+app.get('/api/health/midnight', async (_req, res) => {
+  const status = await getMidnightStatus();
+  res.status(status.ready ? 200 : 503).json(status);
 });
 
 app.get('/api/agents', (_req, res) => {

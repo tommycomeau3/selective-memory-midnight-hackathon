@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "../../../",
+  "sources": ["memory-access.compact"],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAAA;;;;;;;;;;MAeA,AAAA,gBAUC;;;;;cATC,SAAkB;cAClB,cAAqB;cACrB,WAAoB;cACpB,WAAmB;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;yCAHnB,SAAkB,+BAClB,cAAqB,+BACrB,WAAoB,+BACpB,WAAmB;;;;;;;;;kDAHnB,SAAkB;kDAClB,cAAqB;kDACrB,WAAoB;kDACpB,WAAmB;;;OAMpB;;;;;;GACA;EA1BD;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IAKA;;;;;;;;;yEAAqC;IACrC;;;;;;;;;yEAAwC;IACxC;;;;;;;;;yEAAuC;IACvC;;;;;;;;;yEAAsC;;;;;;;GAkBrC;EAXD,AAAA,mBAUC;;sBATC,SAAkB;sBAClB,cAAqB;sBACrB,WAAoB;sBACpB,WAAmB;;IAEnB;;;;;;;2HAAuB,SAAO;;yEAAnB;IACX;;;;;;;2HAA4B,cAAY;;yEAAxB;IAChB;;;;;;;2HAAyB,WAAS;;yEAArB;IACb;;;;;;;2HAAyB,WAAS;;yEAArB;;GACd;;;;;;;;;;;;;;;;IApBD;qCAAA;;;;;;;;;;;0GAAqC;KAAA;IACrC;qCAAA;;;;;;;;;;;0GAAwC;KAAA;IACxC;qCAAA;;;;;;;;;;;0GAAuC;KAAA;IACvC;qCAAA;;;;;;;;;;;0GAAsC;KAAA;;;;;;;;;;"
+}
