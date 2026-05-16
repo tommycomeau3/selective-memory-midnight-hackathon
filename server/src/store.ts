@@ -1,38 +1,43 @@
 import type { AgentAccessProof, Grant, Memory } from './types.js';
-import { agents, memories } from './data/seed.js';
+import { agents, getAgent, memories } from './seed.js';
 
-class Store {
-  memories: Memory[] = [...memories];
-  grants: Grant[] = [];
-  agentProofs = new Map<string, AgentAccessProof>();
+/** In-memory state for the hackathon demo (resets when the server restarts). */
+export const store = {
+  memories: [...memories] as Memory[],
+  grants: [] as Grant[],
+  proofs: new Map<string, AgentAccessProof>(),
 
-  getAgents() {
-    return agents;
-  }
+  approveMemories(agentId: string, memoryIds: string[]) {
+    for (const memoryId of memoryIds) {
+      if (!this.grants.some((g) => g.agentId === agentId && g.memoryId === memoryId)) {
+        this.grants.push({ agentId, memoryId });
+      }
+    }
+  },
 
-  getMemories() {
-    return this.memories;
-  }
+  /** Memories this agent can use in chat — only after a proof exists. */
+  getAccessibleMemories(agentId: string): Memory[] {
+    const agent = getAgent(agentId);
+    if (!agent || !this.proofs.has(agentId)) return [];
 
-  getGrantsForAgent(agentId: string): Grant[] {
-    return this.grants.filter((g) => g.agentId === agentId);
-  }
-
-  upsertGrant(grant: Grant) {
-    const idx = this.grants.findIndex(
-      (g) => g.agentId === grant.agentId && g.memoryId === grant.memoryId
+    const granted = new Set(
+      this.grants.filter((g) => g.agentId === agentId).map((g) => g.memoryId)
     );
-    if (idx >= 0) this.grants[idx] = grant;
-    else this.grants.push(grant);
-  }
 
-  setAgentProof(proof: AgentAccessProof) {
-    this.agentProofs.set(proof.agentId, proof);
-  }
+    return this.memories.filter(
+      (m) => agent.allowedCategories.includes(m.category) && granted.has(m.id)
+    );
+  },
 
-  getAgentProof(agentId: string) {
-    return this.agentProofs.get(agentId);
-  }
+  setProof(proof: AgentAccessProof) {
+    this.proofs.set(proof.agentId, proof);
+  },
+
+  hasProof(agentId: string) {
+    return this.proofs.get(agentId)?.verified === true;
+  },
+};
+
+export function listAgents() {
+  return agents;
 }
-
-export const store = new Store();

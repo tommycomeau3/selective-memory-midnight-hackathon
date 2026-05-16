@@ -1,14 +1,10 @@
 export type MemoryCategory = 'health' | 'career' | 'finance' | 'personal';
 
-export type Sensitivity = 'low' | 'medium' | 'high';
-
 export interface Memory {
   id: string;
   title: string;
   content: string;
   category: MemoryCategory;
-  sensitivity: Sensitivity;
-  preview: string;
 }
 
 export interface Agent {
@@ -20,12 +16,10 @@ export interface Agent {
   icon: string;
 }
 
+/** Tracks which memories an agent may read after proof approval. */
 export interface Grant {
   agentId: string;
   memoryId: string;
-  status: 'approved' | 'denied' | 'revoked';
-  expiresAt: number | null;
-  approvedAt: number;
 }
 
 export interface AgentAccessProof {
@@ -36,9 +30,4 @@ export interface AgentAccessProof {
   timestamp: number;
   proofHash: string;
   verified: boolean;
-}
-
-export interface ChatMessage {
-  role: 'user' | 'assistant';
-  content: string;
 }

@@ -8,7 +8,7 @@ import {
   Send,
   ChevronRight,
 } from 'lucide-react';
-import { api } from './lib/api';
+import { generateProof, getAgents, sendChat } from './api';
 import type { Agent, AgentAccessProof, ChatMessage } from './types';
 import { CATEGORY_LABELS } from './types';
 
@@ -33,7 +33,7 @@ export default function App() {
   const selected = agents.find((a) => a.id === selectedId);
 
   useEffect(() => {
-    api.getAgents().then(setAgents);
+    getAgents().then(setAgents);
   }, []);
 
   function selectAgent(id: string) {
@@ -47,7 +47,7 @@ export default function App() {
     if (!selectedId) return;
     setProofLoading(true);
     try {
-      const p = await api.generateProof(selectedId);
+      const p = await generateProof(selectedId);
       setProof(p);
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Proof generation failed');
@@ -63,7 +63,7 @@ export default function App() {
     setInput('');
     setChatLoading(true);
     try {
-      const { reply } = await api.chat(selectedId, text.trim());
+      const { reply } = await sendChat(selectedId, text.trim());
       setMessages((m) => [...m, { role: 'assistant', content: reply }]);
     } catch (err) {
       setMessages((m) => [
