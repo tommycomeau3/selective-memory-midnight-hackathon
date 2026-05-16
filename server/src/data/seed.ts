@@ -7,36 +7,36 @@ function maskPreview(content: string): string {
 
 export const agents: Agent[] = [
   {
-    id: 'career',
-    name: 'Career Agent',
-    description: 'Professional growth, roles, and workplace context only.',
-    allowedCategories: ['career'],
-    blockedCategories: ['health', 'finance', 'dating', 'journal'],
-    icon: 'briefcase',
-  },
-  {
     id: 'health',
     name: 'Health Agent',
     description: 'Wellness, fitness, and medical context only.',
     allowedCategories: ['health'],
-    blockedCategories: ['career', 'finance', 'dating', 'journal'],
+    blockedCategories: ['career', 'finance', 'personal'],
     icon: 'heart-pulse',
+  },
+  {
+    id: 'career',
+    name: 'Career Agent',
+    description: 'Professional growth, roles, and workplace context only.',
+    allowedCategories: ['career'],
+    blockedCategories: ['health', 'finance', 'personal'],
+    icon: 'briefcase',
   },
   {
     id: 'finance',
     name: 'Finance Agent',
     description: 'Budgets, debt, and investments only.',
     allowedCategories: ['finance'],
-    blockedCategories: ['health', 'career', 'dating', 'journal'],
+    blockedCategories: ['health', 'career', 'personal'],
     icon: 'wallet',
   },
   {
-    id: 'dating',
-    name: 'Dating Agent',
-    description: 'Relationship goals, hobbies, and personality — never clinical or financial data.',
-    allowedCategories: ['dating', 'journal'],
+    id: 'personal',
+    name: 'Personal Agent',
+    description: 'Hobbies, relationships, and private journal — never clinical or financial data.',
+    allowedCategories: ['personal'],
     blockedCategories: ['health', 'career', 'finance'],
-    icon: 'heart',
+    icon: 'user',
   },
 ];
 
@@ -114,44 +114,28 @@ const rawMemories: Omit<Memory, 'preview'>[] = [
     sensitivity: 'medium',
   },
   {
-    id: 'mem-dating-1',
+    id: 'mem-personal-1',
     title: 'Hobbies & Interests',
     content:
       'Loves hiking on weekends, cooking Italian food, and playing acoustic guitar. Volunteers at animal shelter monthly.',
-    category: 'dating',
+    category: 'personal',
     sensitivity: 'low',
   },
   {
-    id: 'mem-dating-2',
+    id: 'mem-personal-2',
     title: 'Relationship Goals',
     content:
       'Looking for a long-term committed relationship. Values honesty, humor, and shared outdoor activities.',
-    category: 'dating',
+    category: 'personal',
     sensitivity: 'medium',
   },
   {
-    id: 'mem-dating-3',
-    title: 'Dating App Preferences',
-    content:
-      'Active on two apps but selective about matches. Prefers coffee dates before dinner. Deal-breaker: smoking.',
-    category: 'dating',
-    sensitivity: 'medium',
-  },
-  {
-    id: 'mem-journal-1',
+    id: 'mem-personal-3',
     title: 'Personality Reflection',
     content:
       'I consider myself an introvert who recharges outdoors. Friends describe me as thoughtful and loyal. I open up slowly but deeply.',
-    category: 'journal',
+    category: 'personal',
     sensitivity: 'medium',
-  },
-  {
-    id: 'mem-journal-2',
-    title: 'Private Diary Entry',
-    content:
-      'Some days the anxiety feels overwhelming despite progress. Grateful for therapy but scared to share this at work.',
-    category: 'journal',
-    sensitivity: 'high',
   },
 ];
 
