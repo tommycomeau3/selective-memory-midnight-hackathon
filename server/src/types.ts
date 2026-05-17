@@ -22,6 +22,8 @@ export interface Grant {
   memoryId: string;
 }
 
+export type ProofMode = 'mock' | 'midnight';
+
 export interface AgentAccessProof {
   proofId: string;
   agentId: string;
@@ -30,4 +32,9 @@ export interface AgentAccessProof {
   timestamp: number;
   proofHash: string;
   verified: boolean;
+  proofMode: ProofMode;
+  grantRoot?: string;
+  txId?: string;
+  blockHeight?: number;
+  circuitId?: string;
 }

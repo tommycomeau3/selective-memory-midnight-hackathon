@@ -23,6 +23,7 @@ const DEMO_QUESTION = 'What do you know about me?';
 
 export default function App() {
   const [agents, setAgents] = useState<Agent[]>([]);
+  const [agentsError, setAgentsError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [proof, setProof] = useState<AgentAccessProof | null>(null);
   const [proofLoading, setProofLoading] = useState(false);
@@ -33,7 +34,16 @@ export default function App() {
   const selected = agents.find((a) => a.id === selectedId);
 
   useEffect(() => {
-    getAgents().then(setAgents);
+    getAgents()
+      .then((list) => {
+        setAgents(list);
+        setAgentsError(null);
+      })
+      .catch(() => {
+        setAgentsError(
+          'Could not load agents. Make sure the API is running (npm run dev) on port 3001.'
+        );
+      });
   }, []);
 
   function selectAgent(id: string) {
@@ -64,6 +74,9 @@ export default function App() {
     setChatLoading(true);
     try {
       const { reply } = await sendChat(selectedId, text.trim());
+      if (reply.includes('Generate a Midnight Access Proof')) {
+        setProof(null);
+      }
       setMessages((m) => [...m, { role: 'assistant', content: reply }]);
     } catch (err) {
       setMessages((m) => [
@@ -81,10 +94,18 @@ export default function App() {
   return (
     <div className="min-h-screen bg-white">
       <nav className="border-b border-neutral-200/80">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <span className="text-sm font-semibold tracking-tight text-neutral-900">
-            Selective Memory AI
-          </span>
+        <div className="flex w-full items-center justify-between gap-6 px-4 py-5 sm:px-6">
+          <div className="flex items-center gap-3">
+            <div
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50"
+              aria-hidden
+            >
+              <ShieldCheck className="h-5 w-5 text-indigo-600" />
+            </div>
+            <span className="text-3xl font-semibold tracking-tight text-neutral-900">
+              Selective Memory AI
+            </span>
+          </div>
           <span className="text-xs text-neutral-500">Midnight hackathon demo</span>
         </div>
       </nav>
@@ -106,6 +127,9 @@ export default function App() {
           <p className="mb-4 text-center text-sm font-medium text-neutral-500">
             Choose an agent
           </p>
+          {agentsError && (
+            <p className="mb-4 text-center text-sm text-red-600">{agentsError}</p>
+          )}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {agents.map((agent) => {
               const Icon = ICONS[agent.icon] ?? User;
@@ -178,7 +202,7 @@ export default function App() {
                 disabled={proofLoading}
                 className="btn-primary w-full"
               >
-                {proofLoading ? 'Generating…' : 'Generate Midnight Access Proof'}
+                {proofLoading ? 'Generating ZK proof…' : 'Generate Midnight Access Proof'}
                 {!proofLoading && <ChevronRight className="h-4 w-4" />}
               </button>
 
@@ -213,6 +237,7 @@ export default function App() {
                       <dt className="text-neutral-500">Status</dt>
                       <dd className="font-medium text-emerald-700">
                         {proof.verified ? 'Verified' : 'Pending'}
+                        {proof.proofMode === 'midnight' ? ' (ZK)' : ''}
                       </dd>
                     </div>
                   </dl>

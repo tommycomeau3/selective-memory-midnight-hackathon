@@ -77,7 +77,7 @@ curl http://localhost:3001/api/health/midnight   # after npm run dev
 | `npm run midnight:logs` | Follow proof server logs |
 | `npm run check:midnight` | CLI prerequisite check |
 
-Set `MIDNIGHT_ENABLED=true` in `.env` only after Phase 2 (proof wiring). Until then the app uses the SHA-256 mock proof.
+With `MIDNIGHT_ENABLED=false`, proofs use SHA-256 mock. With `MIDNIGHT_ENABLED=true` (after deploy), proofs submit real `grantAgentAccess` ZK transactions.
 
 ## Midnight Tier A — Phase 1 (Compact contract)
 
@@ -99,6 +99,16 @@ npm run check:midnight    # should show ✓ ZK artifacts
 | `server/src/midnight/category.ts` | Category bit flags (must match contract) |
 | `server/src/midnight/commitments.ts` | `grantRoot` hashing for witnesses |
 
-## Midnight integration (app code)
+## Midnight Tier A — Phase 2 (ZK proof in app)
 
-Search for `MIDNIGHT_INTEGRATION` in `server/src/proof.ts` and `server/src/chat.ts`.
+```bash
+npm run midnight:up
+npm run deploy:midnight -w server   # once: wallet + contract → .midnight-state.json
+# Fund wallet from faucet (preprod), then add to .env:
+#   MIDNIGHT_ENABLED=true
+#   MIDNIGHT_CONTRACT_ADDRESS=...
+#   MIDNIGHT_WALLET_SEED=...
+npm run dev
+```
+
+Proof generation calls `grantAgentAccess` on-chain (30–90s). Chat verifies `grantRoot` before sending memories to the model.

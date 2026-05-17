@@ -10,10 +10,15 @@
     "midnight:down": "node scripts/midnight-docker.mjs down",
     "midnight:logs": "node scripts/midnight-docker.mjs logs",
     "check:midnight": "node scripts/check-midnight-env.mjs",
-    "compile:contract": "node scripts/compile-contract.mjs"
+    "compile:contract": "node scripts/compile-contract.mjs",
+    "deploy:midnight": "npm run deploy:midnight -w server"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22 <24"
+  },
+  "overrides": {
+    "@midnight-ntwrk/ledger-v8": "8.1.0",
+    "@midnight-ntwrk/compact-runtime": "0.15.0"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

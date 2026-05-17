@@ -1,5 +1,7 @@
 node_modules
 dist
 .env
+.midnight-state.json
+.midnight-private-state
 .DS_Store
 *.log

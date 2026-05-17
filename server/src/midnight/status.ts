@@ -3,7 +3,13 @@ import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 import { promisify } from 'util';
-import { midnightConfig, zkArtifactsExist } from './config.js';
+import {
+  canUseMidnightZk,
+  getContractAddress,
+  getWalletSeed,
+  midnightConfig,
+  zkArtifactsExist,
+} from './config.js';
 
 const execFileAsync = promisify(execFile);
 
@@ -19,6 +25,7 @@ export interface MidnightPrerequisiteCheck {
 export interface MidnightStatus {
   enabled: boolean;
   ready: boolean;
+  zkReady: boolean;
   proofServerUrl: string;
   networkId: string;
   checks: MidnightPrerequisiteCheck[];
@@ -134,12 +141,20 @@ export async function getMidnightStatus(): Promise<MidnightStatus> {
   ];
 
   if (midnightConfig.enabled) {
-    checks.push({
-      id: 'contractAddress',
-      label: 'Contract address',
-      ok: Boolean(midnightConfig.contractAddress),
-      detail: midnightConfig.contractAddress || 'Set MIDNIGHT_CONTRACT_ADDRESS after deploy (Phase 1+)',
-    });
+    checks.push(
+      {
+        id: 'contractAddress',
+        label: 'Contract address',
+        ok: Boolean(getContractAddress()),
+        detail: getContractAddress() || 'Run npm run deploy:midnight -w server',
+      },
+      {
+        id: 'walletSeed',
+        label: 'Wallet seed',
+        ok: Boolean(getWalletSeed()),
+        detail: getWalletSeed() ? 'Configured' : 'Run npm run deploy:midnight -w server',
+      }
+    );
   }
 
   const dockerOk = checks.find((c) => c.id === 'docker')?.ok === true;
@@ -147,15 +162,20 @@ export async function getMidnightStatus(): Promise<MidnightStatus> {
   const compactOk = checks.find((c) => c.id === 'compact')?.ok === true;
   const zkOk = checks.find((c) => c.id === 'zkArtifacts')?.ok === true;
   const contractOk = checks.find((c) => c.id === 'contractAddress')?.ok === true;
+  const walletOk = checks.find((c) => c.id === 'walletSeed')?.ok === true;
 
   const phase0Ready = nodeOk && dockerOk && proofServerOk;
 
   const tierAReady =
-    phase0Ready && compactOk && zkOk && (!midnightConfig.enabled || contractOk);
+    phase0Ready &&
+    compactOk &&
+    zkOk &&
+    (!midnightConfig.enabled || (contractOk && walletOk));
 
   return {
     enabled: midnightConfig.enabled,
     ready: midnightConfig.enabled ? tierAReady : phase0Ready,
+    zkReady: canUseMidnightZk(),
     proofServerUrl: midnightConfig.proofServerUrl,
     networkId: midnightConfig.networkId,
     checks,

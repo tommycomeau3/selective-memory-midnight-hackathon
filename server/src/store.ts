@@ -36,6 +36,10 @@ export const store = {
   hasProof(agentId: string) {
     return this.proofs.get(agentId)?.verified === true;
   },
+
+  getProof(agentId: string) {
+    return this.proofs.get(agentId);
+  },
 };
 
 export function listAgents() {
