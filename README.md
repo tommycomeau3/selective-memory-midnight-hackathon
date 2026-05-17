@@ -14,14 +14,6 @@ npm run dev
 
 Open http://localhost:5173
 
-## Demo (2 minutes)
-
-1. Click **Health**, **Career**, **Finance**, or **Personal**
-2. Review allowed vs blocked memory scopes
-3. Click **Generate Midnight Access Proof**
-4. Ask: *"What do you know about me?"*
-5. Switch agents and repeat — each agent gives a **different** answer
-
 ## Project layout
 
 ```
